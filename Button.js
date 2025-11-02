@@ -7,19 +7,31 @@ class Button {
     this.label = label;
     this.hovered = false;
   }
+
   update(mx, my) {
-    this.hovered = mx > this.x - this.w / 2 && mx < this.x + this.w / 2 &&
-                   my > this.y - this.h / 2 && my < this.y + this.h / 2;
+    this.hovered =
+      mx > this.x - this.w / 2 &&
+      mx < this.x + this.w / 2 &&
+      my > this.y - this.h / 2 &&
+      my < this.y + this.h / 2;
   }
+
   isClicked(mx, my) {
-    return this.hovered;
+    return (
+      mx > this.x - this.w / 2 &&
+      mx < this.x + this.w / 2 &&
+      my > this.y - this.h / 2 &&
+      my < this.y + this.h / 2
+    );
   }
+
   display() {
     noStroke();
     fill(this.hovered ? 200 : 150);
     rect(this.x, this.y, this.w, this.h, 10);
     fill(0);
     textSize(20);
+    textAlign(CENTER, CENTER);
     text(this.label, this.x, this.y);
   }
 }
