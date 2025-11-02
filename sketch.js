@@ -1,3 +1,8 @@
+console.log("Button:", typeof Button);
+console.log("Platform:", typeof Platform);
+console.log("Player:", typeof Player);
+console.log("Enemy:", typeof Enemy);
+
 let gameState = 0; // 0 = Menu, 1 = Game, 2 = Credits
 let startButton, creditsButton;
 
