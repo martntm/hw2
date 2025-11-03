@@ -2,7 +2,7 @@ class Goal {
   constructor(x, y, r = 30) {
     this.x = x;
     this.y = y;
-    this.r = r; // radius of the goal area
+    this.r = r;
   }
 
   display() {
