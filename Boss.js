@@ -5,7 +5,7 @@ class Boss {
     this.w = 60;
     this.h = 60;
     this.speed = 2;
-    this.shootInterval = 90; // shoots roughly every 1.5 seconds at 60 FPS
+    this.shootInterval = 90;
     this.shootTimer = 0;
     this.img = img;
     this.projectiles = [];
@@ -15,7 +15,6 @@ class Boss {
   update(player) {
     this.shootTimer++;
 
-    // ✅ Horizontal movement
     if (this.movingRight) {
       this.x += this.speed;
       if (this.x > width - this.w / 2) this.movingRight = false;
@@ -24,7 +23,7 @@ class Boss {
       if (this.x < this.w / 2) this.movingRight = true;
     }
 
-    // ✅ Shooting logic
+    // Shooting logic
     if (this.shootTimer >= this.shootInterval && player) {
       this.shootTimer = 0;
       const ang = atan2(player.pos.y - this.y, player.pos.x - this.x);
@@ -33,7 +32,6 @@ class Boss {
       );
     }
 
-    // Update projectiles
     this.projectiles.forEach(p => p.update());
     this.projectiles = this.projectiles.filter(p => !p.dead);
   }
