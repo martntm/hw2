@@ -32,7 +32,7 @@ function setup() {
   creditsButton = new Button(width / 2, height / 2 + 40, 200, 60, "Credits");
 
   // Player
-  player = new Player(10, 510, playerImg, damageSound);
+  player = new Player(10, 550, playerImg, damageSound);
 
   // Platforms
   ground = new Platform(0, 590, 800, 10);
