@@ -14,20 +14,26 @@ class Boss {
 update(player) {
   this.shootTimer++;
 
+  // Basic movement (horizontal back-and-forth)
+  this.x += this.speed;
+  if (this.x > width - this.w / 2 || this.x < this.w / 2) {
+    this.speed *= -1;
+  }
+
+  // Shooting
   if (this.shootTimer >= this.shootInterval && player) {
     this.shootTimer = 0;
-
-    // Use player.pos.x and player.pos.y to aim correctly
     const ang = atan2(player.pos.y - this.y, player.pos.x - this.x);
-
     this.projectiles.push(
       new BossProjectile(this.x, this.y, cos(ang) * 4, sin(ang) * 4)
     );
   }
 
+  // Update projectiles
   this.projectiles.forEach(p => p.update());
   this.projectiles = this.projectiles.filter(p => !p.dead);
 }
+
 
   display() {
     // Draw boss

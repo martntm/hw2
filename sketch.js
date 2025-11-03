@@ -32,7 +32,7 @@ function setup() {
   creditsButton = new Button(width / 2, height / 2 + 40, 200, 60, "Credits");
 
   // Player
-  player = new Player(10, 500, playerImg, damageSound);
+  player = new Player(10, 510, playerImg, damageSound);
 
   // Platforms
   ground = new Platform(0, 590, 800, 10);
@@ -127,16 +127,19 @@ function drawGame() {
   rectMode(CORNER);
   background(135, 206, 235);
 
-  if (gameWon) {
-    background(30);
-    fill(255, 255, 0);
-    textSize(48);
-    text("YOU WIN!", width / 2, height / 2);
-    textSize(20);
-    fill(255);
-    text("Press any key to return", width / 2, height / 2 + 60);
-    return;
-  }
+if (gameWon) {
+  background(30);
+  fill(255, 255, 0);
+  textAlign(CENTER, CENTER); // ✅ center text
+  textSize(48);
+  text("YOU WIN!", width / 2, height / 2);
+  textSize(20);
+  fill(255);
+  text("Press any key to return", width / 2, height / 2 + 60);
+  textAlign(LEFT, TOP); // ✅ restore default after
+  return;
+}
+
 
   // Platforms
   ground.display();
@@ -217,18 +220,19 @@ function drawGame() {
 }
 
 function mousePressed() {
-  if (gameState === 0) {
-    if (startButton.isClicked(mouseX, mouseY)) {
-      gameState = 1;
-      // ✅ Prevent music crash on blocked autoplay
-      if (bgMusic && !bgMusic.isPlaying()) {
-        try { bgMusic.loop(); } catch (e) { console.warn("Music error:", e); }
-      }
-    } else if (creditsButton.isClicked(mouseX, mouseY)) {
-      gameState = 2;
+if (startButton.isClicked(mouseX, mouseY)) {
+  gameState = 1;
+  if (bgMusic && !bgMusic.isPlaying()) {
+    try {
+      userStartAudio(); // ✅ allow browser to resume AudioContext
+      bgMusic.loop();
+    } catch (e) {
+      console.warn("Music error:", e);
     }
   }
 }
+}
+
 
 function keyPressed() {
   if (gameState === 2 || (gameWon && keyIsPressed)) {
