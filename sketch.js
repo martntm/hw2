@@ -73,10 +73,16 @@ function setup() {
   // Goal
   goal = new Goal(0, 135);
 
-  if (!bgMusic.isPlaying()) bgMusic.loop();
+  // ✅ SAFETY for bgMusic looping
+  if (bgMusic && !bgMusic.isPlaying()) {
+    try { bgMusic.loop(); } catch (e) { console.warn("Music error:", e); }
+  }
 }
 
 function draw() {
+  // ✅ Debug counter to detect freezes
+  console.log("Frame:", frameCount);
+
   if (gameState === 0) {
     drawMenu();
   } else if (gameState === 1) {
@@ -113,6 +119,11 @@ function drawCredits() {
 }
 
 function drawGame() {
+  // ✅ DEBUG CHECKS for disappearing entities
+  if (!player) console.error("Player undefined");
+  if (!boss) console.error("Boss undefined");
+  if (!goal) console.error("Goal undefined");
+
   rectMode(CORNER);
   background(135, 206, 235);
 
@@ -157,14 +168,18 @@ function drawGame() {
   enemy5.update(); enemy5.display();
 
   // Boss
-  boss.update();
-  boss.display();
+  if (boss) {
+    boss.update();
+    boss.display();
+  }
 
   // Player
   const platforms = [ground, platform1, platform2, platform3, platform4, platform5, platform6, platform7, platform8, platform9];
   const ladders = [ladder, ladder2, ladder3, ladder4, ladder5, ladder6, ladder7, ladder8];
-  player.update(platforms, ladders);
-  player.display();
+  if (player) {
+    player.update(platforms, ladders);
+    player.display();
+  }
 
   // Collisions
   if (
@@ -177,23 +192,27 @@ function drawGame() {
     player.takeDamage();
   }
 
-  for (const bp of boss.projectiles) {
-    if (dist(bp.x, bp.y, player.pos.x + player.w / 2, player.pos.y + player.h / 2) < 15) {
-      player.takeDamage();
+  if (boss && boss.projectiles) {
+    for (const bp of boss.projectiles) {
+      if (dist(bp.x, bp.y, player.pos.x + player.w / 2, player.pos.y + player.h / 2) < 15) {
+        player.takeDamage();
+      }
     }
   }
 
   // Power-up
-  if (power.active && power.collidesWith(player)) {
+  if (power && power.active && power.collidesWith(player)) {
     power.active = false;
     player.activateInvincibility(400); // 8 seconds
   }
-  power.display();
+  if (power) power.display();
 
   // Goal
-  goal.display();
-  if (goal.collidesWith(player)) {
-    gameWon = true;
+  if (goal) {
+    goal.display();
+    if (goal.collidesWith(player)) {
+      gameWon = true;
+    }
   }
 }
 
@@ -201,7 +220,10 @@ function mousePressed() {
   if (gameState === 0) {
     if (startButton.isClicked(mouseX, mouseY)) {
       gameState = 1;
-      if (!bgMusic.isPlaying()) bgMusic.loop();
+      // ✅ Prevent music crash on blocked autoplay
+      if (bgMusic && !bgMusic.isPlaying()) {
+        try { bgMusic.loop(); } catch (e) { console.warn("Music error:", e); }
+      }
     } else if (creditsButton.isClicked(mouseX, mouseY)) {
       gameState = 2;
     }
