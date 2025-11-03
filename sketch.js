@@ -20,11 +20,11 @@ let playerImg, enemyImg, bossImg;
 
 function preload() {
   soundFormats('mp3','wav','ogg');
-  try { bgMusic = loadSound('assets/background.wav'); } catch(e){}
-  try { damageSound = loadSound('assets/damage.wav'); } catch(e){}
-  try { playerImg = loadImage('assets/player.png'); } catch(e){}
-  try { enemyImg  = loadImage('assets/enemy.png'); } catch(e){}
-  try { bossImg   = loadImage('assets/boss.png'); } catch(e){}
+  bgMusic = loadSound('assets/background.wav');
+  damageSound = loadSound('assets/damage.wav');
+  playerImg = loadImage('assets/player.png');
+  enemyImg  = loadImage('assets/enemy.png'); 
+  bossImg   = loadImage('assets/boss.png');
 }
 
 function setup() {
