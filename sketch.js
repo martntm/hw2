@@ -72,17 +72,9 @@ function setup() {
 
   // Goal
   goal = new Goal(0, 135);
-
-  // ✅ SAFETY for bgMusic looping
-  if (bgMusic && !bgMusic.isPlaying()) {
-    try { bgMusic.loop(); } catch (e) { console.warn("Music error:", e); }
-  }
 }
 
 function draw() {
-  // ✅ Debug counter to detect freezes
-  console.log("Frame:", frameCount);
-
   if (gameState === 0) {
     drawMenu();
   } else if (gameState === 1) {
@@ -119,27 +111,21 @@ function drawCredits() {
 }
 
 function drawGame() {
-  // ✅ DEBUG CHECKS for disappearing entities
-  if (!player) console.error("Player undefined");
-  if (!boss) console.error("Boss undefined");
-  if (!goal) console.error("Goal undefined");
-
   rectMode(CORNER);
   background(135, 206, 235);
 
-if (gameWon) {
-  background(30);
-  fill(255, 255, 0);
-  textAlign(CENTER, CENTER); // ✅ center text
-  textSize(48);
-  text("YOU WIN!", width / 2, height / 2);
-  textSize(20);
-  fill(255);
-  text("Press any key to return", width / 2, height / 2 + 60);
-  textAlign(LEFT, TOP); // ✅ restore default after
-  return;
-}
-
+  if (gameWon) {
+    background(30);
+    fill(255, 255, 0);
+    textAlign(CENTER, CENTER);
+    textSize(48);
+    text("YOU WIN!", width / 2, height / 2);
+    textSize(20);
+    fill(255);
+    text("Press any key to return", width / 2, height / 2 + 60);
+    textAlign(LEFT, TOP);
+    return;
+  }
 
   // Platforms
   ground.display();
@@ -172,7 +158,7 @@ if (gameWon) {
 
   // Boss
   if (boss) {
-    boss.update();
+    boss.update(player);
     boss.display();
   }
 
@@ -219,20 +205,26 @@ if (gameWon) {
   }
 }
 
+// ✅ Audio fix: Play music properly on user click
 function mousePressed() {
-if (startButton.isClicked(mouseX, mouseY)) {
-  gameState = 1;
-  if (bgMusic && !bgMusic.isPlaying()) {
-    try {
-      userStartAudio(); // ✅ allow browser to resume AudioContext
-      bgMusic.loop();
-    } catch (e) {
-      console.warn("Music error:", e);
+  if (gameState === 0) {
+    if (startButton.isClicked(mouseX, mouseY)) {
+      gameState = 1;
+
+      // Properly unlock audio and start music immediately
+      if (bgMusic && !bgMusic.isPlaying()) {
+        try {
+          userStartAudio(); // unlocks AudioContext (required by browsers)
+          bgMusic.loop();
+        } catch (e) {
+          console.warn("Music start error:", e);
+        }
+      }
+    } else if (creditsButton.isClicked(mouseX, mouseY)) {
+      gameState = 2;
     }
   }
 }
-}
-
 
 function keyPressed() {
   if (gameState === 2 || (gameWon && keyIsPressed)) {
