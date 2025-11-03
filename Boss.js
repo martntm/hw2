@@ -11,25 +11,23 @@ class Boss {
     this.projectiles = [];
   }
 
-  update(player) {
-    this.shootTimer++;
+update(player) {
+  this.shootTimer++;
 
-    if (this.shootTimer >= this.shootInterval) {
-      this.shootTimer = 0;
+  if (this.shootTimer >= this.shootInterval && player) {
+    this.shootTimer = 0;
 
-      // Calculate angle toward player center
-      const ang = atan2(player.pos.y - this.y, player.pos.x - this.x);
+    // Use player.pos.x and player.pos.y to aim correctly
+    const ang = atan2(player.pos.y - this.y, player.pos.x - this.x);
 
-      // Fire a new projectile
-      this.projectiles.push(
-        new BossProjectile(this.x, this.y, cos(ang) * 4, sin(ang) * 4)
-      );
-    }
-
-    // Update projectiles
-    this.projectiles.forEach(p => p.update());
-    this.projectiles = this.projectiles.filter(p => !p.dead);
+    this.projectiles.push(
+      new BossProjectile(this.x, this.y, cos(ang) * 4, sin(ang) * 4)
+    );
   }
+
+  this.projectiles.forEach(p => p.update());
+  this.projectiles = this.projectiles.filter(p => !p.dead);
+}
 
   display() {
     // Draw boss
