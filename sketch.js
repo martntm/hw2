@@ -205,16 +205,16 @@ function drawGame() {
   }
 }
 
-// ✅ Audio fix: Play music properly on user click
+
 function mousePressed() {
   if (gameState === 0) {
     if (startButton.isClicked(mouseX, mouseY)) {
       gameState = 1;
 
-      // Properly unlock audio and start music immediately
+      
       if (bgMusic && !bgMusic.isPlaying()) {
         try {
-          userStartAudio(); // unlocks AudioContext (required by browsers)
+          userStartAudio();
           bgMusic.loop();
         } catch (e) {
           console.warn("Music start error:", e);
